@@ -1,12 +1,12 @@
 /*
- * porthole-ng v0.0.1
+ * spar-ng v0.0.1
  */
 'use strict';
-angular.module('porthole-ng', []).
-    provider('portholeFactory', function () {
+angular.module('spar-ng', []).
+    provider('sparFactory', function () {
 
         // when forwarding events, prefix the event name
-        var defaultPrefix = 'porthole:',
+        var defaultPrefix = 'spar:',
             ioSocket;
         // Define our interceptors (functions that will be called on recieved messages)
         var interceptorFactories = this.interceptors = [];
