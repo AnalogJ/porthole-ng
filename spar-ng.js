@@ -1,12 +1,9 @@
-/*
- * spar-ng v0.0.1
- */
 'use strict';
-angular.module('spar-ng', []).
-    provider('sparFactory', function () {
+angular.module('porthole-ng', []).
+    provider('portholeFactory', function () {
 
         // when forwarding events, prefix the event name
-        var defaultPrefix = 'spar:',
+        var defaultPrefix = 'sails:',
             ioSocket;
         // Define our interceptors (functions that will be called on recieved messages)
         var interceptorFactories = this.interceptors = [];
@@ -241,33 +238,31 @@ angular.module('spar-ng', []).
                     /**
                      * Listens for messages on the socket and calls the callback provided with the message.
                      *
-                     * @param model The model that the message listener is for.
-                     * @param id The id of the object the message listener is for.
+                     * @param selector The model (and id) that the message listener is for, eg. "user:1" or "book"
                      * @param cb The callback for when the websocket recieves a message.
                      *
                      * @return A deregister function to be called to remove the listener.
                      */
-                    forward: function (model,id, scope) {
-                        if (typeof scope == 'undefined') {
-                            scope = id;
-                            id = null;
-                        }
+                    forward: function (selector, scope) {
+
                         if (!scope) {
                             scope = defaultScope;
                         }
-
-
-
-
+                        var selector_parts = selector.split(':');
+                        var model = selector_parts[0];
+                        var id = selector_parts[1] || null;
+                        console.log("forward called:", model,id,scope)
 
                         var generateBroadcast = function(model, id, scope){
                             var model_selector = model+ (id ? ":"+id : "");
                             var prefixedEvent = prefix + model_selector;
                             var _id = id;
                             var _scope = scope;
+                            console.log("generate the callback", model, id, prefixedEvent)
                             return function(message) {
+                                console.log("inside the callback", model, id, message)
 
-                                if(_id && message.id !== _id) {
+                                if(_id && message.id != _id) {
                                     return;
                                 }
                                 else{
